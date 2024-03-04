@@ -12,10 +12,21 @@ abstract class AppStrings {
       Continue = "Continue",
       send = "Send",
       cancel = "Cancel",
+      retake = "retake",
+      turnLeft = "Turn Left",
+      smile = "Smile",
+      selfieImage = "Selfie Image",
       termsAndCondition = "Terms and Condition",
+      takeYourSelfiePhotoWithNiceSmile =
+          "Take your selfie photo with nice smile",
       CapturedIDCard = "Captured ID Card",
       YourIDCardWasNotRecognized = "Your ID Card was not recognized!",
-      YouCanSendThePhotoIfItIsClearAndIfItIsNotClearYouCanRetakeThePhoto = "You can send the photo if it is clear, and if it is not clear, you can retake the photo.",
+      PleaseTakePicturesOfYourIDCardAsPortrayedBelowMakeSureThePictureIsAsClearAsPossibleAndGlareFree =
+          "Please take pictures of your ID card as portrayed below, make sure the picture is as clear as possible and glare-free.",
+      YouCanSendThePhotoIfItIsClearAndIfItIsNotClearYouCanRetakeThePhoto =
+          "You can send the photo if it is clear, and if it is not clear, you can retake the photo.",
       YourIDCardWasSuccessfullyMatched =
-          "Your ID Card was successfully matched";
+          "Your ID Card was successfully matched",
+      KeepYourHeadSteadyWeAreGoingToTakeAPictureOfYourFace =
+          "Keep your head steady, we're going to take a picture of your face";
 }

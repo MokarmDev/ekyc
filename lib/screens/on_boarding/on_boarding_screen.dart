@@ -1,6 +1,7 @@
 import 'package:ekyc/screens/on_boarding/widgets/custom_on_boarding_body.dart';
 import 'package:ekyc/screens/on_boarding/widgets/get_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({super.key});
@@ -18,7 +19,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
     return SafeArea(
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: ListView(
             children: [
               CustomOnBoardingBody(

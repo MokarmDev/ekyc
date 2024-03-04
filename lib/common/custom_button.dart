@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_utils_project/flutter_utils_project.dart';
 
 import '../constants/app_colors.dart';
@@ -18,11 +19,11 @@ class CustomButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
           backgroundColor: color ?? AppColors.kPrimaryColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.r))),
       child: Text(text,
           style: CustomTextStyles.titleStyle
-              .copyWith(color: AppColors.kWhiteColor, fontSize: 18)),
-    ).widthAndHeight(width: double.infinity, height: 56);
+              .copyWith(color: AppColors.kWhiteColor, fontSize: 18.sp)),
+    ).widthAndHeight(width: double.infinity, height: 56.w);
   }
 }

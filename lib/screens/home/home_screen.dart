@@ -2,13 +2,15 @@ import 'dart:io';
 
 import 'package:camera_camera/camera_camera.dart';
 import 'package:ekyc/common/custom_button.dart';
+import 'package:ekyc/constants/app_colors.dart';
 import 'package:ekyc/constants/app_text_styles.dart';
-import 'package:ekyc/screens/success/success_screen.dart';
-import 'package:ekyc/services/services_api.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_utils_project/flutter_utils_project.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../constants/app_assets.dart';
 import '../../constants/app_strings.dart';
+import '../../services/service_locator.dart';
+import '../../services/services_api.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -64,10 +66,34 @@ class HomeBodyEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [],
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 22.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.info_outline,
+              color: AppColors.kPrimaryColor,
+              size: 50.0,
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
+            Text(
+              AppStrings
+                  .PleaseTakePicturesOfYourIDCardAsPortrayedBelowMakeSureThePictureIsAsClearAsPossibleAndGlareFree,
+              style: CustomTextStyles.smallText
+                  .copyWith(fontSize: 18.sp, fontWeight: FontWeight.w500),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 50.h,
+            ),
+            Image.asset(Assets.card),
+          ],
+        ),
       ),
     );
   }
@@ -81,20 +107,26 @@ class ShowImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    File front, back;
+
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 24.0,
-          vertical: 10,
+        padding: EdgeInsets.symmetric(
+          horizontal: 24.w,
+          vertical: 10.h,
         ),
         child: Column(
           children: [
-            50.height,
+            SizedBox(
+              height: 50.h,
+            ),
             Text(
               AppStrings.CapturedIDCard,
               style: CustomTextStyles.titleStyle,
             ),
-            10.height,
+            SizedBox(
+              height: 10.h,
+            ),
             Text(
               AppStrings
                   .YouCanSendThePhotoIfItIsClearAndIfItIsNotClearYouCanRetakeThePhoto,
@@ -108,8 +140,8 @@ class ShowImageCard extends StatelessWidget {
               itemBuilder: (_, index) => Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
-                  width: 300,
-                  height: 200,
+                  width: 300.w,
+                  height: 200.h,
                   child: Image.file(
                     photos[index],
                     fit: BoxFit.cover,
@@ -117,26 +149,21 @@ class ShowImageCard extends StatelessWidget {
                 ),
               ),
             ),
-            90.height,
+            SizedBox(
+              height: 90.h,
+            ),
             Visibility(
               visible: photos.length == 2,
               child: CustomButton(
-                onPressed: () async {
-                  final api = ServicesApi();
-                  var response =
-                      await api.sendImageToOCR(photos[0].path, photos[1].path);
-                  print('Has responded $response');
-                  if (response) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SuccessScreen(),
-                        ));
-                  } else {
-                    print('Error sending request');
-                  }
+                onPressed: () {
+                  front = photos[0];
+                  back = photos[1];
+
+                  getIt<ServicesApi>().sendImageToOCR(front, back);
+
+                  Navigator.pushNamed(context, '/success');
                 },
-                text: 'SEND',
+                text: AppStrings.send,
               ),
             ),
             Visibility(
@@ -146,7 +173,10 @@ class ShowImageCard extends StatelessWidget {
                   onPressed();
                   photos.clear();
                 },
-                child: const Text('CANCEL'),
+                child: Text(
+                  AppStrings.retake,
+                  style: CustomTextStyles.titleStyle,
+                ),
               ),
             ),
           ],

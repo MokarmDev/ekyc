@@ -1,6 +1,7 @@
 import 'package:ekyc/constants/app_assets.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_utils_project/flutter_utils_project.dart';
+import 'package:m7_livelyness_detection/index.dart';
 
 import '../constants/app_text_styles.dart';
 import 'custom_button.dart';
@@ -13,14 +14,15 @@ class CustomInfoHandler extends StatelessWidget {
   final Color? color;
   final Function() onPressed;
 
-  const CustomInfoHandler(
-      {super.key,
-      required this.image,
-      required this.title,
-      required this.subTitle,
-      required this.onPressed,
-      required this.titleButton,
-      this.color});
+  const CustomInfoHandler({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.subTitle,
+    required this.onPressed,
+    required this.titleButton,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +40,14 @@ class CustomInfoHandler extends StatelessWidget {
               180.height,
               Image.asset(
                 image,
-                height: 270,
-                width: 270,
+                height: 270.h,
+                width: 270.w,
               ),
               20.height,
               Text(
                 title,
                 style: CustomTextStyles.titleStyle
-                    .copyWith(fontSize: 30, color: color),
+                    .copyWith(fontSize: 30.sp, color: color),
               ),
               Text(
                 subTitle,
@@ -56,7 +58,7 @@ class CustomInfoHandler extends StatelessWidget {
             ],
           ).center(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 15),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 15.h),
             child: Align(
                 alignment: Alignment.bottomCenter,
                 child: CustomButton(

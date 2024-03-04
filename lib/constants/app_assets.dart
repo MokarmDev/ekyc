@@ -11,6 +11,7 @@ class Assets {
   static const String success = 'assets/images/success.png';
   static const String oops = 'assets/images/oops.png';
   static const String selfie = 'assets/images/selfie.png';
+  static const String card = 'assets/images/card.png';
   static const String livelynessDetection =
       'assets/images/livelyness_detection.svg';
 }

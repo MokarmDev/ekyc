@@ -20,6 +20,7 @@ dependencies:
   camera_camera: ^3.0.0
   m7_livelyness_detection: ^0.0.6+4
   http: ^1.2.0
+  flutter_screenutil: ^5.9.0
 
 dev_dependencies:
   flutter_test:

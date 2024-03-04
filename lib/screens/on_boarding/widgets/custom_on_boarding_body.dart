@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_utils_project/flutter_utils_project.dart';
 
@@ -24,15 +25,19 @@ class CustomOnBoardingBody extends StatelessWidget {
           children: [
             SvgPicture.asset(
               onBoardingData[index].imagePath,
-              height: 300,
-              width: 300,
+              height: 300.h,
+              width: 300.w,
             ),
-            24.height,
+            SizedBox(
+              height: 24.h,
+            ),
             CustomSmoothPageIndicator(
               controller: controller,
               count: 4,
             ),
-            100.height,
+            SizedBox(
+              height: 100.h,
+            ),
             Text(
               onBoardingData[index].title,
               maxLines: 4,
