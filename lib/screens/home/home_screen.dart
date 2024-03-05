@@ -4,6 +4,7 @@ import 'package:camera_camera/camera_camera.dart';
 import 'package:ekyc/common/custom_button.dart';
 import 'package:ekyc/constants/app_colors.dart';
 import 'package:ekyc/constants/app_text_styles.dart';
+import 'package:ekyc/database/cache/cache_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -30,7 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 cameraSide: CameraSide.front,
                 resolutionPreset: ResolutionPreset.ultraHigh,
                 enableZoom: false,
-                mode: CameraMode.ratio4s3,
+                mode: CameraMode.ratio16s9,
+                flashModes: const [FlashMode.off],
                 onFile: (file) {
                   photos.add(file);
                   Navigator.pop(context);
@@ -99,15 +101,23 @@ class HomeBodyEmpty extends StatelessWidget {
   }
 }
 
-class ShowImageCard extends StatelessWidget {
+class ShowImageCard extends StatefulWidget {
   final List<File> photos;
   final Function() onPressed;
-  const ShowImageCard(
+  bool isLoading = false;
+   ShowImageCard(
       {super.key, required this.photos, required this.onPressed});
 
   @override
+  State<ShowImageCard> createState() => _ShowImageCardState();
+}
+
+class _ShowImageCardState extends State<ShowImageCard> {
+  @override
   Widget build(BuildContext context) {
     File front, back;
+    bool ocrData = false;
+    bool deepfaceData = false;
 
     return SingleChildScrollView(
       child: Padding(
@@ -133,17 +143,22 @@ class ShowImageCard extends StatelessWidget {
               style: CustomTextStyles.smallText,
               textAlign: TextAlign.center,
             ),
-            ListView.builder(
+            widget.isLoading ? Padding(
+              padding: EdgeInsets.all(50),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: CircularProgressIndicator())) : ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: photos.length,
+              itemCount: widget.photos.length,
               itemBuilder: (_, index) => Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
                   width: 300.w,
                   height: 200.h,
                   child: Image.file(
-                    photos[index],
+                    widget.photos[index],
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -153,25 +168,36 @@ class ShowImageCard extends StatelessWidget {
               height: 90.h,
             ),
             Visibility(
-              visible: photos.length == 2,
+              visible: widget.photos.length == 2 && widget.isLoading == false,
               child: CustomButton(
-                onPressed: () {
-                  front = photos[0];
-                  back = photos[1];
+                onPressed: () async {
+                  setState(() {
+                    widget.isLoading = true;
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please wait, This may take a while'), duration: Duration(seconds: 5),));
+                  });
+                  front = widget.photos[0];
+                  back = widget.photos[1];
 
-                  getIt<ServicesApi>().sendImageToOCR(front, back);
-
-                  Navigator.pushNamed(context, '/success');
+                  ocrData = await getIt<ServicesApi>().sendToOCRNew(front, back);
+                  File liveImage = File(getIt<CacheHelper>().getDataString(key: 'live_image')!);
+                  deepfaceData = await getIt<ServicesApi>().sendToDeepFace(front: front, live_image: liveImage);
+                  widget.isLoading = false;
+                  if(ocrData && deepfaceData){
+                    Navigator.pushReplacementNamed(context, '/success');
+                  }
+                  else{
+                    Navigator.pushNamed(context, '/failure');
+                  }
                 },
                 text: AppStrings.send,
               ),
             ),
             Visibility(
-              visible: photos.length == 2,
+              visible: widget.photos.length == 2 && widget.isLoading == false,
               child: TextButton(
                 onPressed: () {
-                  onPressed();
-                  photos.clear();
+                  widget.onPressed();
+                  widget.photos.clear();
                 },
                 child: Text(
                   AppStrings.retake,

@@ -1,6 +1,7 @@
 import 'package:ekyc/screens/failure/failure_screen.dart';
 import 'package:ekyc/screens/home/home_screen.dart';
 import 'package:ekyc/screens/on_boarding/on_boarding_screen.dart';
+import 'package:ekyc/screens/profile/profile_screen.dart';
 import 'package:ekyc/screens/selfie/selfie_screen.dart';
 import 'package:ekyc/screens/splash/splash_screen.dart';
 import 'package:ekyc/screens/success/success_screen.dart';
@@ -48,7 +49,8 @@ class EKYC extends StatelessWidget {
             '/onBoarding': (context) => const OnBoardingView(),
             '/selfie': (context) => const SelfieScreen(),
             '/success': (context) => const SuccessScreen(),
-            '/Failure': (context) => const FailureScreen(),
+            '/failure': (context) => const FailureScreen(),
+            '/profile': (context) => ProfileScreen(),
           },
         );
       },

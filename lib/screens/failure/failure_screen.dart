@@ -14,7 +14,10 @@ class FailureScreen extends StatelessWidget {
       title: AppStrings.oops,
       subTitle: AppStrings.YourIDCardWasNotRecognized,
       color: const Color(0xffE5734C),
-      onPressed: () {},
+      onPressed: () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('There was a problem authenticating you, please redo the process')));
+        Navigator.pushReplacementNamed(context, '/selfie');
+      },
       titleButton: AppStrings.tryAgain,
     );
   }
