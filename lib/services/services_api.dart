@@ -7,43 +7,23 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class ServicesApi {
-  final String baseUrl = 'http://192.168.0.101:5000/api';
+  final String baseUrl = 'http://192.168.0.94:5000/api';
 
   Future<bool> checkConnToServer() async{
-    var response = await http.get(Uri.base);
-    return jsonDecode(response.body);
-  }
-
-  Future<bool> sendImageToOCR(File front, File back) async {
-    var url = Uri.parse('$baseUrl/ocr');
-    List idFront = await front.readAsBytes();
-    List idBack = await back.readAsBytes();
-
-    var request = http.MultipartRequest('POST', url);
-
-    request.files.add(http.MultipartFile.fromString(
-      'front',
-      idFront.toString(),
-      // contentType: MediaType('front', 'jpg'),
-    ));
-    request.files.add(http.MultipartFile.fromString(
-      'back',
-      idBack.toString(),
-      // contentType: MediaType('back', 'jpg'),
-    ));
-
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      print('تم إرسال الصورة بنجاح');
-      print('response ${response.stream}');
-      return true;
-    } else {
-      print('حدث خطأ أثناء إرسال الصورة');
+    try{
+      var response = await http.get(Uri.parse(baseUrl));
+      var body = jsonDecode(response.body);
+      return body['status'] == 'running' ? true : false;
+    } on SocketException catch(e){
+      print('Socket exception $e');
+      return false;
+    }catch(e){
+      print('an error has occured $e');
       return false;
     }
   }
 
-  Future<bool> sendToOCRNew(File front, File back) async {
+  Future<bool> sendToOCR(File front, File back) async {
     var url = Uri.parse('$baseUrl/ocr');
 
     var request = http.MultipartRequest('POST', url);

@@ -1,8 +1,6 @@
 import 'package:ekyc/constants/app_assets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_utils_project/flutter_utils_project.dart';
 import 'package:m7_livelyness_detection/index.dart';
-
 import '../constants/app_text_styles.dart';
 import 'custom_button.dart';
 
@@ -35,28 +33,30 @@ class CustomInfoHandler extends StatelessWidget {
               child: Image.asset(
                 Assets.clip,
               )),
-          Column(
-            children: [
-              180.height,
-              Image.asset(
-                image,
-                height: 270.h,
-                width: 270.w,
-              ),
-              20.height,
-              Text(
-                title,
-                style: CustomTextStyles.titleStyle
-                    .copyWith(fontSize: 30.sp, color: color),
-              ),
-              Text(
-                subTitle,
-                style: CustomTextStyles.smallText.copyWith(
-                  color: color,
+          Center(
+            child: Column(
+              children: [
+                SizedBox(height: 180.h,),
+                Image.asset(
+                  image,
+                  height: 270.h,
+                  width: 270.w,
                 ),
-              ),
-            ],
-          ).center(),
+                SizedBox(height: 20.h,),
+                Text(
+                  title,
+                  style: CustomTextStyles.titleStyle
+                      .copyWith(fontSize: 30.sp, color: color),
+                ),
+                Text(
+                  subTitle,
+                  style: CustomTextStyles.smallText.copyWith(
+                    color: color,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 15.h),
             child: Align(

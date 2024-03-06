@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:ekyc/constants/app_colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +14,7 @@ import '../../services/service_locator.dart';
 class ProfileScreen extends StatelessWidget {
   final ocrData = jsonDecode(getIt<CacheHelper>().getDataString(key: 'ocrData')!);
   final deepfaceData = getIt<CacheHelper>().getData(key: 'deepfaceData');
+  final live_image = getIt<CacheHelper>().getData(key: 'live_image');
    ProfileScreen({super.key});
 
   @override
@@ -31,7 +33,11 @@ class ProfileScreen extends StatelessWidget {
             child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 width: MediaQuery.of(context).size.width * 0.5,
-                child: CircleAvatar(child: Icon(Icons.person_2_outlined, size: 100,),)),
+                child: CircleAvatar(
+                  backgroundImage:
+                  FileImage(File(live_image)),
+                  radius: 30,
+                )),
           ),
           Positioned(
 

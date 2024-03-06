@@ -171,23 +171,31 @@ class _ShowImageCardState extends State<ShowImageCard> {
               visible: widget.photos.length == 2 && widget.isLoading == false,
               child: CustomButton(
                 onPressed: () async {
-                  setState(() {
-                    widget.isLoading = true;
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please wait, This may take a while'), duration: Duration(seconds: 5),));
+                  Future.wait([getIt<ServicesApi>().checkConnToServer()]).then((value) async {
+                    if(value[0]){
+                      print('Connection to server is successfu');
+                      setState(() {
+                        widget.isLoading = true;
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please wait, This may take a while'), duration: Duration(seconds: 5),));
+                      });
+                      front = widget.photos[0];
+                      back = widget.photos[1];
+                      ocrData = await getIt<ServicesApi>().sendToOCR(front, back);
+                      File liveImage = File(getIt<CacheHelper>().getDataString(key: 'live_image')!);
+                      deepfaceData = await getIt<ServicesApi>().sendToDeepFace(front: front, live_image: liveImage);
+                      widget.isLoading = false;
+                      if(ocrData && deepfaceData){
+                        Navigator.pushReplacementNamed(context, '/success');
+                      }
+                      else{
+                        Navigator.pushNamed(context, '/failure');
+                      }
+                    }
+                    else{
+                      print('error');
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('There was an error connecting to server, please check connection'), duration: Duration(seconds: 5),));}
                   });
-                  front = widget.photos[0];
-                  back = widget.photos[1];
 
-                  ocrData = await getIt<ServicesApi>().sendToOCRNew(front, back);
-                  File liveImage = File(getIt<CacheHelper>().getDataString(key: 'live_image')!);
-                  deepfaceData = await getIt<ServicesApi>().sendToDeepFace(front: front, live_image: liveImage);
-                  widget.isLoading = false;
-                  if(ocrData && deepfaceData){
-                    Navigator.pushReplacementNamed(context, '/success');
-                  }
-                  else{
-                    Navigator.pushNamed(context, '/failure');
-                  }
                 },
                 text: AppStrings.send,
               ),

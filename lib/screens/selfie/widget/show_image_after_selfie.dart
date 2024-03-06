@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_utils_project/flutter_utils_project.dart';
-
 import '../../../common/custom_button.dart';
 import '../../../constants/app_strings.dart';
 import '../../../database/cache/cache_helper.dart';
@@ -26,12 +24,13 @@ class ShowImageAfterSelfie extends StatelessWidget {
               SizedBox(
                 height: 100.h,
               ),
-              Image.file(
-                File(imageLivePath ?? ""),
-                fit: BoxFit.contain,
-              ).widthAndHeight(
+              SizedBox(
                 width: 400.h,
                 height: 400.w,
+                child: Image.file(
+                  File(imageLivePath ?? ""),
+                  fit: BoxFit.contain,
+                ),
               ),
               SizedBox(
                 height: 200.h,
