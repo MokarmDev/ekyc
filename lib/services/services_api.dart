@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class ServicesApi {
-  final String baseUrl = 'http://192.168.0.94:5000/api';
+  final String baseUrl = 'http://192.168.0.1:5000/api';
 
   Future<bool> checkConnToServer() async{
     try{
