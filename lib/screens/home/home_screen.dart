@@ -105,8 +105,7 @@ class ShowImageCard extends StatefulWidget {
   final List<File> photos;
   final Function() onPressed;
   bool isLoading = false;
-   ShowImageCard(
-      {super.key, required this.photos, required this.onPressed});
+  ShowImageCard({super.key, required this.photos, required this.onPressed});
 
   @override
   State<ShowImageCard> createState() => _ShowImageCardState();
@@ -143,27 +142,29 @@ class _ShowImageCardState extends State<ShowImageCard> {
               style: CustomTextStyles.smallText,
               textAlign: TextAlign.center,
             ),
-            widget.isLoading ? Padding(
-              padding: EdgeInsets.all(50),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: CircularProgressIndicator())) : ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: widget.photos.length,
-              itemBuilder: (_, index) => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: 300.w,
-                  height: 200.h,
-                  child: Image.file(
-                    widget.photos[index],
-                    fit: BoxFit.cover,
+            widget.isLoading
+                ? Padding(
+                    padding: EdgeInsets.all(50),
+                    child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: CircularProgressIndicator()))
+                : ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: widget.photos.length,
+                    itemBuilder: (_, index) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: 300.w,
+                        height: 200.h,
+                        child: Image.file(
+                          widget.photos[index],
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
             SizedBox(
               height: 90.h,
             ),
@@ -171,31 +172,50 @@ class _ShowImageCardState extends State<ShowImageCard> {
               visible: widget.photos.length == 2 && widget.isLoading == false,
               child: CustomButton(
                 onPressed: () async {
-                  Future.wait([getIt<ServicesApi>().checkConnToServer()]).then((value) async {
-                    if(value[0]){
-                      print('Connection to server is successfu');
+                  Future.wait([getIt<ServicesApi>().checkConnToServer()])
+                      .then((value) async {
+                    if (value[0]) {
                       setState(() {
                         widget.isLoading = true;
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please wait, This may take a while'), duration: Duration(seconds: 5),));
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text('Please wait, This may take a while'),
+                          duration: Duration(seconds: 5),
+                        ));
                       });
                       front = widget.photos[0];
                       back = widget.photos[1];
-                      ocrData = await getIt<ServicesApi>().sendToOCR(front, back);
-                      File liveImage = File(getIt<CacheHelper>().getDataString(key: 'live_image')!);
-                      deepfaceData = await getIt<ServicesApi>().sendToDeepFace(front: front, live_image: liveImage);
+                      ocrData =
+                          await getIt<ServicesApi>().sendToOCR(front, back);
+                      File liveImage = File(getIt<CacheHelper>()
+                          .getDataString(key: 'live_image')!);
+                      deepfaceData = await getIt<ServicesApi>()
+                          .sendToDeepFace(front: front, live_image: liveImage);
+
                       widget.isLoading = false;
-                      if(ocrData && deepfaceData){
-                        Navigator.pushReplacementNamed(context, '/success');
-                      }
-                      else{
+                      if (ocrData && deepfaceData) {
+                        var ocrData =
+                            getIt<CacheHelper>().getData(key: 'ocrData');
+                        if (!ocrData['is_expired']) {
+                          Navigator.pushReplacementNamed(context, '/success');
+                        } else {
+                          // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          //     content: Text(
+                          //         'ID Card is Expired, please renew ID and try again')));
+                          Navigator.pushReplacementNamed(context, '/failure');
+                        }
+                      } else {
                         Navigator.pushNamed(context, '/failure');
                       }
-                    }
-                    else{
+                    } else {
                       print('error');
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('There was an error connecting to server, please check connection'), duration: Duration(seconds: 5),));}
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text(
+                            'There was an error connecting to server, please check connection'),
+                        duration: Duration(seconds: 5),
+                      ));
+                    }
                   });
-
                 },
                 text: AppStrings.send,
               ),
