@@ -144,7 +144,7 @@ class _ShowImageCardState extends State<ShowImageCard> {
             ),
             widget.isLoading
                 ? Padding(
-                    padding: EdgeInsets.all(50),
+                    padding: const EdgeInsets.all(50),
                     child: SizedBox(
                         height: MediaQuery.of(context).size.height * 0.3,
                         width: MediaQuery.of(context).size.width * 0.7,
